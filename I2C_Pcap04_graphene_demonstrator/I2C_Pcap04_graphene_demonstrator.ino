@@ -1,8 +1,7 @@
 #include <Wire.h>                                                                     // Include the wire library for I2C communication
-#include <movingAvg.h>
 #include <LiquidCrystal.h>
 
-#define I2C_ADDRESS 0x28                                                              // PCap04 Adress
+#define I2C_ADDRESS 0x28                                                              // PCap04 Address
 #define REGISTER_TEST 0x7e                                                            // Test read opcode 0x7e
 #define STATUS0 32                                                                    // read register 32 (status register)
 #define STATUS1 33                                                                    // read register 33 (status register)
@@ -30,7 +29,6 @@ void setup() {
 //  
 //  readStatus(STATUS0);                                                                // request status
 //  
-  avgCap.begin();
 
   lcd.begin(16,2);                                                                      // start the LCD
   lcd.setCursor(0,0);                                                                   // set cursor for next write
@@ -40,7 +38,6 @@ void setup() {
   for (count = 0; count<n_setup_values; ++ count) {                                     // calculating offset
     double resultf = readResult(RES1);
     Serial.println(resultf);
-    //offset = avgCap.reading(resultf);
     offset = (resultf + offset * count) / (count + 1);
     delay(700);
     
@@ -125,7 +122,7 @@ void loop() {
 
   double resultf = readResult(RES1);                                                  // Request result from RES1
   Serial.println(resultf);                                                            // Print result to Serial
-  delay(700); //700 ms conversion time per sample
+  delay(700);                                                                         // 700 ms conversion time per sample
   double drift = resultf - offset;                                                    // calculate Drift (current result - calculated offset)
   
   lcd.setCursor(4,0);                                                                 // write the drift
